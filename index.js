@@ -14,7 +14,6 @@ document.addEventListener('click', function(event) {
         addItemToOrder(event.target.dataset.add)
     } else if (event.target.dataset.remove) {
         removeItemFromOrder(event.target.dataset.remove)
-        console.log(event.target.dataset.remove)
     } else if (event.target.id === "complete-order") {
         displayPaymentModal()
     } else if (event.target.id === "pay-btn") {
@@ -24,10 +23,9 @@ document.addEventListener('click', function(event) {
 })
 
 function processPayment() {
-    paymentModal.style.display = "none"
-    
     const userName = nameInput.value
-    
+
+    paymentModal.style.display = "none"
     orderSection.innerHTML = `
         <div class="completed-order-txt">
             <p>Thanks, ${userName}! Your order is on its way!</p>
@@ -52,12 +50,13 @@ function addItemToOrder(itemId) {
 }
 
 function removeItemFromOrder(itemId) {
-    const targetItemObj = menuArray.filter(function(item) {
-        return item.id == itemId
-    })[0]
+    itemId = Number(itemId)
+    const targetItemObj = menuArray.find(obj => obj.id === itemId)
     
     if (order.includes(targetItemObj)) {
-        order.pop(targetItemObj)
+        const index = order.indexOf(targetItemObj)
+        order.splice(index, 1)
+
         totalPrice -= targetItemObj.price
         renderOrderSection()
         renderOrderItems()
